@@ -1,7 +1,7 @@
 <img src="images/Capture1.PNG" />
-# Hololense Starter
+# Hololens Starter
 
-A simple project for getting started with the hololense including the Uniy pugin for the HoloToolKit by Microsoft.
+A simple project for getting started with the hololens including the Uniy pugin for the HoloToolKit by Microsoft.
 
 ## HoloToolkit-Unity
 This is effectively part of the existing HoloToolkit, but this is the repository that will contain all Unity specific components.
@@ -28,7 +28,7 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 
 ## Getting started
 
-You don't need a hololense to get started. You can get the emulator, pull the project and build for the hololense, you can find the information you need right here:
+You don't need a hololens to get started. You can get the emulator, pull the project and build for the hololens, you can find the information you need right here:
 https://www.microsoft.com/microsoft-hololens/en-us/developers
 
 ## License
