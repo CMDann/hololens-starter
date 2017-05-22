@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Custom/Unlit_glass_button"
+﻿Shader "Custom/Unlit_glass_button"
 {
 	Properties
 	{
@@ -54,7 +52,7 @@ Shader "Custom/Unlit_glass_button"
 			struct v2f
 			{
 				float4 pos : SV_POSITION;
-				fixed4 uv : TEXCOORD0;
+				fixed3 uv : TEXCOORD0;
 				fixed3 localNormal : TEXCOORD1;
 				fixed3 viewDir : TEXCOORD2;
 				fixed3 halfVec : TEXCOORD3;

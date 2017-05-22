@@ -5,41 +5,71 @@
 
 using UnityEngine;
 using HoloToolkit.Sharing.Spawning;
+using HoloToolkit.Unity.InputModule;
 
 namespace HoloToolkit.Sharing.Tests
 {
     /// <summary>
     /// Class that handles spawning sync objects on keyboard presses, for the SpawningTest scene.
     /// </summary>
-    public class SpawnTestKeyboardSpawning : MonoBehaviour
+    public class SyncObjectSpawner : MonoBehaviour
     {
-        public GameObject SpawnParent;
+        [SerializeField]
+        private PrefabSpawnManager spawnManager;
 
-        public PrefabSpawnManager SpawnManager;
+        [SerializeField]
+        [Tooltip("Optional transform target, for when you want to spawn the object on a specific parent.  If this value is not set, then the spawned objects will be spawned on this game object.")]
+        private Transform spawnParentTransform;
 
-        private void Update()
+        private void Awake()
         {
-            // Spawn a basic spawned object when I is pressed
-            if (Input.GetKeyDown(KeyCode.I))
+            if (spawnManager == null)
             {
-                Vector3 position = Random.onUnitSphere * 2;
-                Quaternion rotation = Random.rotation;
-
-                SyncSpawnedObject spawnedObject = new SyncSpawnedObject();
-
-                SpawnManager.Spawn(spawnedObject, position, rotation, SpawnParent, "SpawnedObject", false);
+                Debug.LogError("You need to reference the spawn manager on SyncObjectSpawner.");
             }
 
-            // Spawn a test sphere when O is pressed
-            if (Input.GetKeyDown(KeyCode.O))
+            // If we don't have a spawn parent transform, then spawn the object on this transform.
+            if (spawnParentTransform == null)
             {
-                Vector3 position = Random.onUnitSphere * 2;
-                Quaternion rotation = Random.rotation;
+                spawnParentTransform = transform;
+            }
+        }
 
-                SyncSpawnTestSphere spawnedObject = new SyncSpawnTestSphere();
-                spawnedObject.TestFloat.Value = Random.Range(0f, 100f);
+        public void SpawnBasicSyncObject()
+        {
+            Vector3 position = Random.onUnitSphere * 2;
+            Quaternion rotation = Random.rotation;
 
-                SpawnManager.Spawn(spawnedObject, position, rotation, SpawnParent, "SpawnTestSphere", false);
+            var spawnedObject = new SyncSpawnedObject();
+
+            spawnManager.Spawn(spawnedObject, position, rotation, spawnParentTransform.gameObject, "SpawnedObject", false);
+        }
+
+        public void SpawnCustomSyncObject()
+        {
+            Vector3 position = Random.onUnitSphere * 2;
+            Quaternion rotation = Random.rotation;
+
+            var spawnedObject = new SyncSpawnTestSphere();
+            spawnedObject.TestFloat.Value = Random.Range(0f, 100f);
+
+            spawnManager.Spawn(spawnedObject, position, rotation, spawnParentTransform.gameObject, "SpawnTestSphere", false);
+        }
+
+        /// <summary>
+        /// Deletes any sync object that inherits from SyncSpawnObject.
+        /// </summary>
+        public void DeleteSyncObject()
+        {
+            GameObject hitObject = GazeManager.Instance.HitObject;
+            if (hitObject != null)
+            {
+                var syncModelAccessor = hitObject.GetComponent<DefaultSyncModelAccessor>();
+                if (syncModelAccessor != null)
+                {
+                    var syncSpawnObject = (SyncSpawnedObject)syncModelAccessor.SyncModel;
+                    spawnManager.Delete(syncSpawnObject);
+                }
             }
         }
     }
