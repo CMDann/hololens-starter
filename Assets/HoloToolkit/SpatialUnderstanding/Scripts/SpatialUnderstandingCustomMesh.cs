@@ -5,8 +5,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VR.WSA;
 using HoloToolkit.Unity.SpatialMapping;
+
+#if UNITY_WSA
+#if UNITY_2017_2_OR_NEWER
+using UnityEngine.XR.WSA;
+#else
+using UnityEngine.VR.WSA;
+#endif
+#endif
 
 namespace HoloToolkit.Unity
 {
@@ -186,7 +193,7 @@ namespace HoloToolkit.Unity
             public void AddTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
             {
                 // Currently spatial understanding in the native layer voxellizes the space
-                // into ~2000 voxels per cubic meter.  Even in a degerate case we
+                // into ~2000 voxels per cubic meter.  Even in a degenerate case we
                 // will use far fewer than 65000 vertices, this check should not fail
                 // unless the spatial understanding native layer is updated to have more
                 // voxels per cubic meter.
@@ -211,10 +218,12 @@ namespace HoloToolkit.Unity
         private void Start()
         {
             spatialUnderstanding = SpatialUnderstanding.Instance;
+#if UNITY_WSA
             if (gameObject.GetComponent<WorldAnchor>() == null)
             {
                 gameObject.AddComponent<WorldAnchor>();
             }
+#endif
         }
 
         private void Update()
@@ -438,5 +447,4 @@ namespace HoloToolkit.Unity
             Cleanup();
         }
     }
-
 }
